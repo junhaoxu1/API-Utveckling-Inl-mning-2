@@ -94,4 +94,57 @@ export const register = async (req: Request, res: Response) => {
 	}
 };
 
-export const store = async (req: Request, res: Response) => {};
+export const refresh = async (req: Request, res: Response) => {
+  if (!req.headers.authorization) {
+    debug('Authorization header missing ')
+
+    return res.status(401).send({
+      status: 'Fail',
+      data: 'Authorization required',
+    })
+  }
+
+  const [authSchema, token] = req.headers.authorization.split(" ")
+
+  if (authSchema.toLowerCase() !== 'bearer') {
+    debug('Authorization schema is not Bearer')
+
+    return res.status(401).send({
+      status: 'Fail',
+      data: 'Authorization required',
+    })
+  }
+
+  try {
+    
+    const payload = (jwt.verify(token, process.env.REFRESH_TOKEN_SECRET || "") as unknown) as JwtPayload
+
+    delete payload.iat
+    delete payload.exp
+
+    if (!process.env.ACCESS_TOKEN_SECRET) {
+      return res.status(500).send({
+        status: 'Error',
+        message: 'No access token secret defined'
+      })
+    }
+    const access_token = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+      expiresIn: process.env.ACCESS_TOKEN_LIFETIME || '4h',
+    })
+
+    res.send({
+      status: 'Success',
+      data: {
+        access_token,
+      }
+    })
+
+  } catch (err) {
+      debug('Token failed verification', err)
+
+      return res.status(401).send({
+        status: 'Fail',
+        data: 'Authorization required',
+      })
+  }
+};
