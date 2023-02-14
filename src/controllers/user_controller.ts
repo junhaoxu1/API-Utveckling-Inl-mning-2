@@ -87,7 +87,14 @@ export const register = async (req: Request, res: Response) => {
       password: validatedData.password,
     })
 
-    res.status(201).send({ status: "success", data: user })
+    res.status(201).send({ 
+      status: "success", 
+      data: {
+        email: user.email,
+        first_name: user.first_name,
+        last_name: user.last_name
+      }
+    })
 
   } catch (err) {
 		return res.status(500).send({ status: "error", message: "Could not create user in database" })
