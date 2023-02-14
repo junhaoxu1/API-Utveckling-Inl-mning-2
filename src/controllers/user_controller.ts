@@ -82,17 +82,17 @@ export const register = async (req: Request, res: Response) => {
   try {
     const user = await createUser({
       first_name: req.body.first_name,
-      last_name: req.body.last_name,
-      email: validatedData.email,
-      password: validatedData.password,
+      last_name:  req.body.last_name,
+      email:      validatedData.email,
+      password:   validatedData.password,
     })
 
     res.status(201).send({ 
       status: "success", 
       data: {
-        email: user.email,
+        email:      user.email,
         first_name: user.first_name,
-        last_name: user.last_name
+        last_name:  user.last_name
       }
     })
 
