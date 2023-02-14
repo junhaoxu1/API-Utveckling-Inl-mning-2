@@ -13,7 +13,7 @@ model Album {
 
   photos      Photo[]
 
-  user_id    Int
+  user_id    Int      @db.UnsignedInt
   user       User     @relation(fields: [user_id], references: [id])
 }
 model Photo {
@@ -22,10 +22,9 @@ model Photo {
   url         String   
   comment     String? 
 
-  album_id    Int
-  album       Album   @relation(fields: [album_id], references: [id])
+  album       Album[]
 
-  user_id     Int 
+  user_id     Int     @db.UnsignedInt
   user        User    @relation(fields: [user_id], references: [id])
 }
 

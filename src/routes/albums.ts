@@ -5,10 +5,10 @@ const router = express.Router()
 
 router.get('/', index)
 
-router.get('/:resourceId', show)
+router.get('/:album_id', show)
 
 router.post('/', [], store)
 
-router.patch('/:resourceId', [], update)
+router.patch('/:album_id', [], update)
 
 export default router
