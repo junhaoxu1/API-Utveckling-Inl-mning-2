@@ -63,7 +63,35 @@ export const login = async (req: Request, res: Response) => {
   });
 };
 export const register = async (req: Request, res: Response) => {
-  
+  const validationErrors = validationResult(req)
+	if (!validationErrors.isEmpty()) {
+		return res.status(400).send({
+			status: "fail",
+			data: validationErrors.array(),
+		})
+	}
+
+  const validatedData = matchedData(req)
+  console.log("validatedData: ", validatedData)
+
+  const hashedPassword = await bcrypt.hash(validatedData.password, Number(process.env.SALT_ROUNDS) || 10)
+  console.log('Hashed password:', hashedPassword)
+
+  validatedData.password = hashedPassword
+
+  try {
+    const user = await createUser({
+      first_name: req.body.first_name,
+      last_name: req.body.last_name,
+      email: validatedData.email,
+      password: validatedData.password,
+    })
+
+    res.status(201).send({ status: "success", data: user })
+
+  } catch (err) {
+		return res.status(500).send({ status: "error", message: "Could not create user in database" })
+	}
 };
 
 export const store = async (req: Request, res: Response) => {};

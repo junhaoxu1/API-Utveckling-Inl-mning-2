@@ -1,5 +1,7 @@
 import express from "express"
 import resource from './_router'
+import { register, login } from '../controllers/user_controller'
+import { createUserRules } from "../validator/user_rules"
 
 // instantiate a new router
 const router = express.Router()
@@ -13,9 +15,9 @@ router.get('/', (req, res) => {
 	})
 })
 
-/**
- * [EXAMPLE] /resource
- */
-// router.use('/resource', resource)
+router.post('/register', createUserRules, register)
+
+router.post('/login', login)
+
 
 export default router
