@@ -79,11 +79,21 @@ export const store = async (req: Request, res: Response) => {
 export const storePhoto = async (req: Request, res: Response) => {
   const album_id = Number(req.params.album_id)
   const { photo_id } = req.body
+  const user_id = req.token!.sub
 
   try {
+    const photo = await prisma.photo.findUnique({ 
+        where: { 
+            id: photo_id 
+        } 
+    });
+    if (photo?.user_id !== user_id) {
+      return res.status(401).send({ status: "error", message: "Unauthorized" });
+    }
+
     await prisma.album.update({
       where: { 
-        id: album_id 
+        id: album_id,
       },
       data: {
         photos: {
