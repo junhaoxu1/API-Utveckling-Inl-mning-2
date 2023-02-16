@@ -1,36 +1,105 @@
-import { getAlbum, getAlbums } from "../services/album_services"
 import { Request, Response } from 'express'
 import { validationResult } from 'express-validator'
 import prisma from '../prisma'
+import Debug from 'debug'
+
+const debug = Debug('prisma-books:album_controller')
 
 export const index = async (req: Request, res: Response) => {
+
     try {
-        const albums = await getAlbums()
+        const albums = await prisma.album.findMany({
+            where:{
+                user_id: req.token!.sub
+            },
+        })
+
         res.send({
             status: 'Success',
-            data: albums
+            data: albums,
         })
-    } catch {
-        res.status(500).send({ status: "error", message: "Couldn't find albums" })
+    } catch (err) {
+        debug("Error when finding albums", err)
+        res.status(500).send({
+            status: 'Error',
+            message: 'Something went wrong'
+        })
     }
 }
 
 export const show = async (req: Request, res: Response) => {
     const album_id = Number(req.params.album_id)
 
-    try {
-        const album = await getAlbum(album_id)
-        res.send({
-            status: 'Success',
-            data: album
+    try {  
+        const album = await prisma.album.findUniqueOrThrow({
+            where: {
+                id: album_id,
+            }, 
+            include: {
+                photos: true,
+            }
         })
-    } catch {
-        res.status(500).send({ status: "error", message: "Couldn't find album" })
+
+        res.send({
+			status: "success",
+			data: album,
+		})
+
+    } catch (err) {
+        debug("Error thrown when finding album with id %o: %o", req.params.album_id, err)
+		return res.status(404).send({ status: "error", message: "Not found" })
     }
 }
 
 
 export const store = async (req: Request, res: Response) => {
+    try {
+        const album = await prisma.album.create({   
+            data: {
+                title:      req.body.title,
+                user: {
+                    connect: {
+                        email: req.token!.email
+                    }
+                }
+            }
+        })
+
+        res.send({
+            status: 'Success',
+            data: album
+        })
+    } catch (err) {
+        debug("Error thrown when creating a album %o: %o", req.body, err)
+		res.status(500).send({ status: "error", message: "Something went wrong" })
+    }
+}
+
+export const storePhoto = async (req: Request, res: Response) => {
+    const album_id = Number(req.params.album_id)
+    const { photo_id } = req.body
+
+    try {
+        const addPhoto = await prisma.album.update({
+            where: { id: album_id },
+            data: {
+                photos: {
+                    connect: {
+                        id: photo_id
+                    }
+                }
+            }
+        })
+
+        res.send({
+            status: 'Success',
+            data: addPhoto
+            })
+
+    } catch (err) {
+        debug("Error thrown when creating a album %o: %o", req.body, err)
+		res.status(500).send({status: "error", message: "Something went wrong", album_id })
+    }
 }
 
 

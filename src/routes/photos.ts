@@ -1,16 +1,14 @@
 import express from 'express'
 import { body } from 'express-validator'
-import { getPhotos } from '../controllers/photo_controller'
-import { index, show, store, update } from '../controllers/_controller'
-import { validateToken } from '../middlewares/auth/jwt'
+import { index, show, store, update } from '../controllers/photo_controller'
 const router = express.Router()
 
-router.get('/', getPhotos)
+router.get('/', index)
 
-router.get('/:resourceId', show)
+router.get('/:photo_id', show)
 
 router.post('/', [], store)
 
-router.patch('/:resourceId', [], update)
+router.patch('/:photo_id', [], update)
 
 export default router
