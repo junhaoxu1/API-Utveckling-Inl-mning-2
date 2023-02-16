@@ -8,14 +8,14 @@ datasource db {
 }
 
 model Album {
-  id          Int     @id @default(autoincrement()) @db.UnsignedInt
+  id          Int      @id @default(autoincrement()) @db.UnsignedInt
   title       String
 
   photo_id    Int
-  photo       Photo   @relation(fields: [photo_id], references: [id])
+  photo       Photo    @relation(fields: [photo_id], references: [id])
 
-  user_id    Int      @db.UnsignedInt
-  user       User     @relation(fields: [user_id], references: [id])
+  user_id     Int      @db.UnsignedInt
+  user        User     @relation(fields: [user_id], references: [id])
 }
 model Photo {
   id          Int      @id @default(autoincrement()) @db.UnsignedInt
@@ -25,13 +25,13 @@ model Photo {
 
   album       Album[]
 
-  user_id     Int     @db.UnsignedInt
-  user        User    @relation(fields: [user_id], references: [id])
+  user_id     Int      @db.UnsignedInt
+  user        User     @relation(fields: [user_id], references: [id])
 }
 
 model User {
-  id          Int     @id @default(autoincrement()) @db.UnsignedInt
-  email       String  @unique
+  id          Int      @id @default(autoincrement()) @db.UnsignedInt
+  email       String   @unique
   password    String
   first_name  String
   last_name   String

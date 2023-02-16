@@ -1,26 +1,26 @@
-import express from "express"
-import { register, login, refresh } from '../controllers/user_controller'
-import { createUserRules } from "../validator/user_rules"
-import photos from './photos'
-import albums from './albums'
-import { validateToken } from "../middlewares/auth/jwt"
+import express from "express";
+import { register, login, refresh } from "../controllers/user_controller";
+import { createUserRules } from "../validator/user_rules";
+import photos from "./photos";
+import albums from "./albums";
+import { validateToken } from "../middlewares/auth/jwt";
 
-const router = express.Router()
+const router = express.Router();
 
-router.get('/', (req, res) => {
-	res.send({
-		message: "I AM API, BEEP BOOP",
-	})
-})
+router.get("/", (req, res) => {
+  res.send({
+    message: "I AM API, BEEP BOOP",
+  });
+});
 
-router.use('/photos', validateToken, photos)
+router.use("/photos", validateToken, photos);
 
-router.use('/albums', validateToken, albums)
+router.use("/albums", validateToken, albums);
 
-router.post('/register', createUserRules, register)
+router.post("/register", createUserRules, register);
 
-router.post('/login', login)
+router.post("/login", login);
 
-router.post('/refresh', refresh)
+router.post("/refresh", refresh);
 
-export default router
+export default router;
