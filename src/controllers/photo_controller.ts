@@ -75,4 +75,32 @@ export const store = async (req: Request, res: Response) => {
   }
 };
 
-export const update = async (req: Request, res: Response) => {};
+export const update = async (req: Request, res: Response) => {
+  const photo_id = Number(req.params.photo_id)
+  const user_id = req.token!.sub
+
+	try {
+
+    const ownedPhoto = await prisma.photo.findUnique({ 
+      where: { 
+          id: photo_id 
+      }, 
+    })
+    
+    if (ownedPhoto?.user_id !== user_id) {
+      return res.status(401).send({ status: "error", message: "Unauthorized" });
+    }
+
+		const photo = await prisma.photo.update({
+			where: {
+				id: photo_id,
+			},
+			data: req.body,
+		})
+
+		return res.send(photo)
+
+	} catch (err) {
+		return res.status(500).send({ message: "Something went wrong" })
+	}
+};
