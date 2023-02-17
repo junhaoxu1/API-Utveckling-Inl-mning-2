@@ -116,4 +116,34 @@ export const storePhoto = async (req: Request, res: Response) => {
   }
 };
 
-export const update = async (req: Request, res: Response) => {};
+export const update = async (req: Request, res: Response) => {
+  const album_id  = Number(req.params.album_id)
+  const user_id = req.token!.sub
+
+  console.log(JSON.stringify(req.params))
+
+	try {
+    const ownedAlbum = await prisma.album.findUnique({ 
+      where: { 
+          id: album_id 
+      }, 
+    })
+    
+    if (ownedAlbum?.user_id !== user_id) {
+      return res.status(401).send({ status: "error", message: "Unauthorized" });
+    }
+
+		const album = await prisma.album.update({
+			where: {
+				id: album_id ,
+			},
+			data: req.body,
+		})
+
+		return res.send(album)
+
+	} catch (err) {
+    console.log(album_id )
+		return res.status(500).send({ message: "Could not patch album" })
+	}
+};

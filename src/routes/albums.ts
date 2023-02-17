@@ -11,6 +11,6 @@ router.post('/', [], store)
 
 router.post('/:album_id/photos', [] , storePhoto)
 
-router.patch('/:albumId', [], update)
+router.patch('/:album_id', [], update)
 
 export default router

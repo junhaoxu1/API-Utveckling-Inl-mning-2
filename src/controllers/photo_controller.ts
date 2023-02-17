@@ -80,13 +80,12 @@ export const update = async (req: Request, res: Response) => {
   const user_id = req.token!.sub
 
 	try {
-
     const ownedPhoto = await prisma.photo.findUnique({ 
       where: { 
           id: photo_id 
       }, 
     })
-    
+
     if (ownedPhoto?.user_id !== user_id) {
       return res.status(401).send({ status: "error", message: "Unauthorized" });
     }
