@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.get("/", (req, res) => {
   res.send({
-    message: "I AM API, BEEP BOOP",
+    message: "Make Sure To Register And Login before accessing Albums and Photos",
   });
 });
 
