@@ -7,7 +7,7 @@ import prisma from "../prisma";
 import { JwtPayload } from "../types";
 import { createUser, getUserByEmail } from "./../services/user_service";
 
-const debug = Debug("prisma-books:user_controller");
+const debug = Debug("API-Utveckling-Inl-mning-2:user_controller");
 
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;

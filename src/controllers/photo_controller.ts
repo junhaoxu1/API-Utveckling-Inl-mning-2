@@ -3,7 +3,7 @@ import Debug from "debug";
 import prisma from "../prisma";
 import { validationResult } from "express-validator";
 
-const debug = Debug("prisma-books:photo_controller");
+const debug = Debug("API-Utveckling-Inl-mning-2:photo_controller");
 
 export const index = async (req: Request, res: Response) => {
 
