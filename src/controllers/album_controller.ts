@@ -11,7 +11,7 @@ export const index = async (req: Request, res: Response) => {
   
   try {
 
-    newAlbum = JSON.stringify(req.token)
+    newAlbum = JSON.stringify(req.token!)
 
     const albums = await prisma.album.findMany({
       where: {
