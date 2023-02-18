@@ -7,11 +7,7 @@ const debug = Debug("prisma-books:photo_controller");
 
 export const index = async (req: Request, res: Response) => {
 
-  let newAlbum = "test"
-
   try {
-
-    newAlbum = JSON.stringify(req.token)
 
     const photos = await prisma.photo.findMany({
       where: {
