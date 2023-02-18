@@ -6,22 +6,21 @@ import { validationResult } from "express-validator";
 const debug = Debug("prisma-books:album_controller");
 
 export const index = async (req: Request, res: Response) => {
-  console.log(JSON.stringify(prisma.album))
+  const albums = await prisma.album.findMany({
+    where: {
+      user_id: req.token!.sub,
+    },
+  });
 
   try {
-    const albums = await prisma.album.findMany({
-      where: {
-        user_id: req.token!.sub,
-      },
-    });
 
     res.send({
       status: "Success",
-      data: albums,
+      data: albums
     });
   } catch (err) {
     debug("Error when finding albums", err);
-    res.status(500).send({status: "Error", message: prisma.album,
+    res.status(500).send({status: "Error", message: albums,
     });
   }
 };
