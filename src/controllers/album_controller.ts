@@ -23,9 +23,11 @@ export const index = async (req: Request, res: Response) => {
     });
   } catch (err) {
     debug("Error when finding albums", err);
-    console.error("Albums value:", albums);
-    res.status(500).send({status: "Error", message: albums
-    });
+    
+    if(albums) {
+      debug(albums)
+    }
+    res.status(500).send({ status: "Error", message: albums });
   }
 };
 
