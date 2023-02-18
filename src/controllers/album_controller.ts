@@ -26,7 +26,7 @@ export const index = async (req: Request, res: Response) => {
     });
   } catch (err) {
     debug("Error when finding albums", err);
-    res.status(500).send({status: "Error", message: JSON.stringify(req.token)
+    res.status(500).send({status: "Error", message: req.token
     });
   }
 };
