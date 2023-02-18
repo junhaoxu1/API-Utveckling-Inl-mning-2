@@ -1,19 +1,19 @@
-import { body } from 'express-validator'
+import { body } from "express-validator";
 
 export const createPhotoRules = [
-    body('title')
-    .isString().withMessage("Not a String")
+  body("title")
+    .isString()
+    .withMessage("Not a String")
     .bail()
-    .isLength({min: 1}),
+    .isLength({ min: 1 }),
 
-    body('url')
-    .isString().withMessage("Not a String")
+  body("url")
+    .isString()
+    .withMessage("Not a String")
     .bail()
-    .isURL().withMessage("Not a URL")
-    .isLength({min: 1}),
+    .isURL()
+    .withMessage("Not a URL")
+    .isLength({ min: 1 }),
 
-    body('comment')
-    .optional()
-    .bail()
-
-]
+  body("comment").optional().bail(),
+];

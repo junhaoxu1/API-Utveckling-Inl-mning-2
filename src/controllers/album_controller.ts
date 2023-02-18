@@ -54,13 +54,13 @@ export const show = async (req: Request, res: Response) => {
 };
 
 export const store = async (req: Request, res: Response) => {
-  const validationErrors = validationResult(req)
-	if (!validationErrors.isEmpty()) {
-		return res.status(400).send({
-			status: "fail",
-			data: validationErrors.array(),
-		})
-	}
+  const validationErrors = validationResult(req);
+  if (!validationErrors.isEmpty()) {
+    return res.status(400).send({
+      status: "fail",
+      data: validationErrors.array(),
+    });
+  }
 
   try {
     const album = await prisma.album.create({
@@ -85,22 +85,22 @@ export const store = async (req: Request, res: Response) => {
 };
 
 export const storePhoto = async (req: Request, res: Response) => {
-  const album_id = Number(req.params.album_id)
-  const { photo_id } = req.body
-  const user_id = req.token!.sub
+  const album_id = Number(req.params.album_id);
+  const { photo_id } = req.body;
+  const user_id = req.token!.sub;
 
   try {
-    const photo = await prisma.photo.findUnique({ 
-        where: { 
-            id: photo_id 
-        } 
+    const photo = await prisma.photo.findUnique({
+      where: {
+        id: photo_id,
+      },
     });
     if (photo?.user_id !== user_id) {
       return res.status(401).send({ status: "error", message: "Unauthorized" });
     }
 
     await prisma.album.update({
-      where: { 
+      where: {
         id: album_id,
       },
       data: {
@@ -114,51 +114,47 @@ export const storePhoto = async (req: Request, res: Response) => {
 
     res.send({
       status: "Success",
-      data: null
+      data: null,
     });
   } catch (err) {
     debug("Error thrown when creating a album %o: %o", req.body, err);
-    res
-      .status(500)
-      .send({ status: "error", message: "Something went wrong" });
+    res.status(500).send({ status: "error", message: "Something went wrong" });
   }
 };
 
 export const update = async (req: Request, res: Response) => {
+  const validationErrors = validationResult(req);
+  if (!validationErrors.isEmpty()) {
+    return res.status(400).send({
+      status: "fail",
+      data: validationErrors.array(),
+    });
+  }
 
-  const validationErrors = validationResult(req)
-	if (!validationErrors.isEmpty()) {
-		return res.status(400).send({
-			status: "fail",
-			data: validationErrors.array(),
-		})
-	}
+  const album_id = Number(req.params.album_id);
+  const user_id = req.token!.sub;
 
-  const album_id  = Number(req.params.album_id)
-  const user_id = req.token!.sub
+  try {
+    const ownedAlbum = await prisma.album.findUnique({
+      where: {
+        id: album_id,
+      },
+    });
 
-	try {
-    const ownedAlbum = await prisma.album.findUnique({ 
-      where: { 
-          id: album_id 
-      }, 
-    })
-    
     if (ownedAlbum?.user_id !== user_id) {
       return res.status(401).send({ status: "error", message: "Unauthorized" });
     }
 
-		const album = await prisma.album.update({
-			where: {
-				id: album_id ,
-			},
-			data: req.body,
-		})
+    const album = await prisma.album.update({
+      where: {
+        id: album_id,
+      },
+      data: req.body,
+    });
 
-		return res.send(album)
-
-	} catch (err) {
-    console.log(album_id )
-		return res.status(500).send({ message: "Could not patch album" })
-	}
+    return res.send(album);
+  } catch (err) {
+    console.log(album_id);
+    return res.status(500).send({ message: "Could not patch album" });
+  }
 };
