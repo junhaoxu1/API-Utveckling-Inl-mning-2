@@ -11,15 +11,13 @@ export const index = async (req: Request, res: Response) => {
   
   try {
 
-    newAlbum = "test2"
+    newAlbum = String(req.token)
 
     const albums = await prisma.album.findMany({
       where: {
         user_id: req.token!.sub,
       },
     });
-
-    newAlbum = "test3"
 
     res.send({
       status: "Success",
