@@ -118,7 +118,7 @@ export const storePhoto = async (req: Request, res: Response) => {
     });
   } catch (err) {
     debug("Error thrown when creating a album %o: %o", req.body, err);
-    res.status(500).send({ status: "error", message: "Something went wrong" });
+    res.status(500).send({ status: "error", message: "Could not add photo to album" });
   }
 };
 
