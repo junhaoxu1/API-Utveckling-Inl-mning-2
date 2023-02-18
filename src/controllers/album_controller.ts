@@ -54,6 +54,14 @@ export const show = async (req: Request, res: Response) => {
 };
 
 export const store = async (req: Request, res: Response) => {
+  const validationErrors = validationResult(req)
+	if (!validationErrors.isEmpty()) {
+		return res.status(400).send({
+			status: "fail",
+			data: validationErrors.array(),
+		})
+	}
+
   try {
     const album = await prisma.album.create({
       data: {
@@ -117,10 +125,17 @@ export const storePhoto = async (req: Request, res: Response) => {
 };
 
 export const update = async (req: Request, res: Response) => {
+
+  const validationErrors = validationResult(req)
+	if (!validationErrors.isEmpty()) {
+		return res.status(400).send({
+			status: "fail",
+			data: validationErrors.array(),
+		})
+	}
+
   const album_id  = Number(req.params.album_id)
   const user_id = req.token!.sub
-
-  console.log(JSON.stringify(req.params))
 
 	try {
     const ownedAlbum = await prisma.album.findUnique({ 
