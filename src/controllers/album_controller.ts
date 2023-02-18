@@ -21,7 +21,7 @@ export const index = async (req: Request, res: Response) => {
     });
   } catch (err) {
     debug("Error when finding albums", err);
-    res.status(500).send({status: "Error", message: "Could Not Get Albums",
+    res.status(500).send({status: "Error", message: JSON.stringify(prisma.album),
     });
   }
 };
