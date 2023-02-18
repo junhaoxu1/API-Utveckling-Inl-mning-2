@@ -13,6 +13,11 @@ export const index = async (req: Request, res: Response) => {
   });
 
   try {
+    const albums = await prisma.album.findMany({
+      where: {
+        user_id: req.token!.sub,
+      },
+    });
 
     res.send({
       status: "Success",
