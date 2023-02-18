@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { validationResult } from "express-validator";
-import prisma from "../prisma";
 import Debug from "debug";
+import prisma from "../prisma";
+import { validationResult } from "express-validator";
 
 const debug = Debug("prisma-books:album_controller");
 
@@ -19,9 +19,7 @@ export const index = async (req: Request, res: Response) => {
     });
   } catch (err) {
     debug("Error when finding albums", err);
-    res.status(500).send({
-      status: "Error",
-      message: "Something went wrong",
+    res.status(500).send({status: "Error", message: "Something went wrong",
     });
   }
 };
@@ -80,7 +78,7 @@ export const store = async (req: Request, res: Response) => {
     });
   } catch (err) {
     debug("Error thrown when creating a album %o: %o", req.body, err);
-    res.status(500).send({ status: "error", message: "Something went wrong" });
+    res.status(500).send({ status: "error", message: "Could Not Create Album" });
   }
 };
 
