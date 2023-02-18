@@ -7,11 +7,13 @@ const debug = Debug("prisma-books:album_controller");
 
 export const index = async (req: Request, res: Response) => {
 
-  let albums
+  let newAlbum = "test"
   
   try {
 
-    albums = await prisma.album.findMany({
+    newAlbum = JSON.stringify(req.token)
+
+    const albums = await prisma.album.findMany({
       where: {
         user_id: req.token!.sub,
       },
@@ -19,11 +21,12 @@ export const index = async (req: Request, res: Response) => {
 
     res.send({
       status: "Success",
-      data: albums
+      data: albums,
+      message: newAlbum
     });
   } catch (err) {
     debug("Error when finding albums", err);
-    res.status(500).send({status: "Error", message: albums,
+    res.status(500).send({status: "Error", message: JSON.stringify(req.token)
     });
   }
 };
