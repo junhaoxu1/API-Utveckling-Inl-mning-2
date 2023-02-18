@@ -35,7 +35,7 @@ export const show = async (req: Request, res: Response) => {
         id: album_id,
       },
       include: {
-        photos: true,
+        photo: true,
       },
     });
 
@@ -104,7 +104,7 @@ export const storePhoto = async (req: Request, res: Response) => {
         id: album_id,
       },
       data: {
-        photos: {
+        photo: {
           connect: {
             id: photo_id,
           },
