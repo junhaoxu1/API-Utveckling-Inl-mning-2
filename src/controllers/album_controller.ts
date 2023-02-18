@@ -19,7 +19,7 @@ export const index = async (req: Request, res: Response) => {
     });
   } catch (err) {
     debug("Error when finding albums", err);
-    res.status(500).send({status: "Error", message: "Something went wrong",
+    res.status(500).send({status: "Error", message: "Could Not Get Albums", err,
     });
   }
 };
@@ -47,7 +47,7 @@ export const show = async (req: Request, res: Response) => {
       req.params.album_id,
       err
     );
-    return res.status(404).send({ status: "error", message: "Not found" });
+    return res.status(404).send({ status: "error", message: "Album Not Found" });
   }
 };
 
