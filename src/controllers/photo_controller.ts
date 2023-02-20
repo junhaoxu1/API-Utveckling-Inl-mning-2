@@ -30,8 +30,19 @@ export const index = async (req: Request, res: Response) => {
 
 export const show = async (req: Request, res: Response) => {
   const photo_id = Number(req.params.photo_id);
+  const user_id = req.token!.sub;
 
   try {
+    const ownedPhoto = await prisma.photo.findUnique({
+      where: {
+        id: photo_id,
+      },
+    });
+  
+    if (ownedPhoto?.user_id !== user_id) {
+      return res.status(401).send({ status: "error", message: "Unauthorized" });
+    }
+
     const photo = await prisma.photo.findUniqueOrThrow({
       where: {
         id: photo_id,

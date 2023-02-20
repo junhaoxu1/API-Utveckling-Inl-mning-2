@@ -30,17 +30,17 @@ export const show = async (req: Request, res: Response) => {
   const album_id = Number(req.params.album_id);
   const user_id = req.token!.sub;
 
-  const ownedAlbum = await prisma.album.findUnique({
-    where: {
-      id: album_id,
-    },
-  });
-
-  if (ownedAlbum?.user_id !== user_id) {
-    return res.status(401).send({ status: "error", message: "Unauthorized" });
-  }
-
   try {
+    const ownedAlbum = await prisma.album.findUnique({
+      where: {
+        id: album_id,
+      },
+    });
+  
+    if (ownedAlbum?.user_id !== user_id) {
+      return res.status(401).send({ status: "error", message: "Unauthorized" });
+    }
+
     const album = await prisma.album.findUniqueOrThrow({
       where: {
         id: album_id,
